@@ -1,0 +1,78 @@
+html, body{
+    margin: 0;
+    padding: 0;
+}
+body{
+    font-family: Arial, sans-serif;
+}
+header{
+    margin-bottom: 5px;
+}
+nav {
+    background-color: deepskyblue;
+}
+nav > ul {
+    list-style: none;
+    padding-inline-start: 0;
+    margin: 0;
+}
+nav  li {
+    display: inline-block;
+    background-color: deepskyblue;
+}
+nav li:hover{
+    background-color: dodgerblue;
+}
+nav  a {
+    color: white;
+    display: inline-block;
+    text-decoration: none;
+    font-size: large;
+    font-family: Arial, sans-serif;
+    padding: 10px;
+}
+#weather-container{
+    max-width: 180px;
+    background-color: lightgrey;
+    border-radius: 5px;
+}
+p{
+    font-weight: bold;
+}
+.weather{
+    text-align: center;
+}
+#icon-container{
+    display: flex;
+    justify-content: center;
+}
+th, td, table{
+    border: 2px solid lightgrey;
+    border-collapse: collapse;
+}
+th{
+    background-color: deepskyblue;
+    color: white;
+}
+th, td{
+    padding: 3px;
+}
+#search-stats tr{
+    cursor: pointer;
+}
+img{
+    width: 32px;
+    height: auto;
+}
+#country-stats-container{
+    display: none;
+}
+#table-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+#map{
+    height: 400px;
+}

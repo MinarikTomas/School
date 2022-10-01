@@ -1,0 +1,36 @@
+html, body{
+    margin: 0;
+    padding: 0;
+}
+body{
+    font-family: Arial, sans-serif;
+}
+header{
+    background-color: deepskyblue;
+    margin-bottom: 5px;
+}
+h1{
+    text-align: center;
+    margin: 0;
+    padding: 5px;
+}
+.container{
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+}
+label{
+    width: 3rem;
+    float: left;
+}
+table, td, th{
+    border: 2px solid lightgrey;
+    border-collapse: collapse;
+    padding: 5px;
+    text-align: center;
+}
+th{
+    background-color: deepskyblue;
+    color: white;
+}
+

@@ -1,0 +1,39 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+h1{
+    text-align: center;
+    background-color: deepskyblue;
+    margin: 0;
+    padding: 15px 0;
+}
+.table-container, .form-container, .row{
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+table{
+    width: 80%;
+}
+table, thead, tr, th, td{
+    border: 2px solid darkgray;
+    border-collapse: collapse;
+    font-size: large;
+}
+form{
+    background-color: whitesmoke;
+}
+@media only screen and (max-width: 750px){
+    table{
+        width: 100%;
+    }
+    .table-container{
+        justify-content: start;
+    }
+}
+@media only screen and (max-width: 347px) {
+    .form-container{
+        justify-content: start;
+    }
+}

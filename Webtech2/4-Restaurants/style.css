@@ -1,0 +1,31 @@
+html, body{
+    padding: 0;
+    margin: 0;
+}
+body{
+    font-family: Arial, sans-serif;
+}
+header{
+    background-color: deepskyblue;
+}
+h1{
+    text-align: center;
+    margin: 0;
+    padding: 5px 0;
+}
+table{
+    width: 100%;
+}
+th, td, table{
+    border: 2px solid lightgrey;
+    border-collapse: collapse;
+}
+th{
+    background-color: deepskyblue;
+    color: white;
+}
+tr:nth-child(even){background-color: #f2f2f2;}
+.add-item, .edit-item{
+    width: 100%;
+    box-sizing: border-box;
+}

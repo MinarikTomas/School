@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Zadanie 6</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        canvas{
+            background-color: black;
+        }
+        span{
+            font-size: large;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <span id="player"></span>
+</div>
+<div>
+    <canvas id="myCanvas" height="500" width="500"></canvas>
+</div>
+<div>
+    <span id="result"></span>
+</div>
+<div>
+    <input type="button" id="restart" value="Restart">
+    <input type="button" id="end" value="End game">
+</div>
+
+<script>
+    const socket = new WebSocket('wss://site132.webte.fei.stuba.sk:9000');
+    const canvas = document.querySelector('#myCanvas');
+    const ctx = canvas.getContext('2d');
+    let dir;
+    let board;
+    const player = document.querySelector('#player');
+    const result = document.querySelector('#result');
+    const restart = document.querySelector('#restart');
+    const end= document.querySelector('#end');
+
+    const drawSquare = (x, y, color) => {
+        ctx.fillStyle = color;
+        ctx.fillRect(x*20, y*20, 20, 20);
+    }
+
+    const drawBoard = (board) => {
+        let x = 0;
+        board.forEach((row, x) => {
+            row.forEach((cell, y) => {
+                const color = getColor(cell);
+                drawSquare(x, y, color);
+            })
+        })
+    }
+
+    const getColor = (value) => {
+        let color = 'black';
+        if (value === 1) {
+            color = 'orange';
+        } else if (value === 2) {
+            color = 'blue';
+        }
+        return color;
+    }
+
+    socket.addEventListener('message', msg => {
+        const data = JSON.parse(msg.data);
+        if(data.id){
+            player.style.color = getColor(data.id);
+            player.textContent = 'Player' + data.id;
+        }else if (data.board) {
+            board = data.board;
+            dir = data.dir;
+            drawBoard(board);
+        }else{
+            result.textContent = data.result;
+        }
+    })
+
+    document.onkeydown = (e) => {
+        switch (e.key) {
+            case "ArrowDown":
+                if (dir[1] !== -1) {
+                    dir = [0, 1];
+                    socket.send(dir);
+                }
+                break;
+            case "ArrowLeft":
+                if (dir[0] !== 1) {
+                    dir = [-1, 0];
+                    socket.send(dir);
+                }
+                break;
+            case "ArrowRight":
+                if (dir[0] !== -1) {
+                    dir = [1, 0];
+                    socket.send(dir);
+                }
+                break;
+            case "ArrowUp":
+                if (dir[1] !== 1) {
+                    dir = [0, -1];
+                    socket.send(dir);
+                }
+                break;
+        }
+    }
+
+    restart.addEventListener('click', () => {
+        result.textContent = '';
+        socket.send('restart');
+    })
+
+    end.addEventListener('click', () => {
+        socket.send('end');
+    })
+
+</script>
+</body>
+</html>
