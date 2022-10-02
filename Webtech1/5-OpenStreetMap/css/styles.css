@@ -1,0 +1,61 @@
+body, html {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+header {
+    background-color: darkblue;
+    color: white;
+}
+
+#map {
+    width: 100%;
+    flex-grow: 1;
+}
+
+h4, h1 {
+    text-align: center;
+}
+
+h1 {
+    margin: 10px 0;
+}
+
+.bus, .bus_n, .tram {
+    padding: 0 5px;
+    margin: 0 2px;
+}
+
+.tram {
+    background-color: red;
+}
+
+.bus {
+    background-color: green;
+}
+
+.bus_n {
+    background-color: black;
+}
+
+.mhd_container {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+}
+
+@media only screen and (max-width: 400px){
+    .row {
+        grid: auto / auto;
+    }
+}

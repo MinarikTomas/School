@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="theme-color" content="#DCDCDC">
+    <meta name="description" content="SortIT je jednoduchá vedomostná hra.">
+    <title>SortIT</title>
+    <link rel="apple-touch-icon" href="/ios/144.png">
+    <link rel="icon" href="favicon.ico">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <img src="SortIT_logo.png" alt="logo" class="resp-img">
+</header>
+<div class="choose-level">
+    <h2>Vyber si level.</h2>
+</div>
+<div class="levels-container"></div>
+<div class="buttons">
+    <input type="button" value="Popis a návod" id="desc">
+</div>
+<div id="backdrop" class="backdrop">
+    <div class="modal desc" >
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Popis a návod</h2>
+        </div>
+        <div class="modal-content">
+            <section>
+                <h3>Popis</h3>
+                <p>SortIT je jednoduchá vedomostná hra. Vašou úlohou je usporiadať možnosti, napríklad podľa popularity alebo roku.
+                    Úlohy sú z oblastí šport, matematika, geografia, literatúra, história a technika.</p>
+                <h3>Návod</h3>
+                <p>Najprv si zvoľte level z dostupných levelov. Potom je vašou úlohou usporiadať zoznam. Prvky zoznamu je možné posúvať potiahnutím myšou alebo dotykom. Kliknutím
+                    na tlačidlo skontrolovať sa správne odpovede zafarbia na zeleno a pridajú sa k ním hodnoty(ak nejaké otázka má).
+                    Nesprávne odpovede sa zafarbia na červeno. Ak je celý zoznam správne usporiadaný už nie je možné meniť poradie v zozname
+                    a odomkne sa ďalší level.</p>
+                <ul>
+                    <li>Tlačidlami &#8678; a &#8680; je možné sa pohybovať medzi odomknutými levelmi.</li>
+                    <li>Tlačidlom domov a kliknutím na logo SortIT sa dostanete na úvodnú stránku so všetkými levelmi.</li>
+                    <li>Tlačidlom nápoveda sa zobarzia správne odpovede.</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</div>
+<script>
+    //The Fisher-Yates algorithm https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+    const shuffleArray = array => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+    if(!localStorage.getItem("order")){
+        const order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        shuffleArray(order);    //randomize levels
+        localStorage.setItem("order", JSON.stringify(order));
+    }
+    let order = JSON.parse(localStorage.getItem("order"));
+
+    if(!localStorage.getItem("unlocked_levels")){
+        const unlockedLevels = [order[0]];
+        localStorage.setItem("unlocked_levels", JSON.stringify(unlockedLevels));
+    }
+
+    let unlocked = JSON.parse(localStorage.getItem("unlocked_levels")).length;
+
+    const container = document.querySelector(".levels-container");
+    container.innerHTML = "";
+    for(let i = 0; i < unlocked; i++){
+        const level = document.createElement("button");
+        level.innerText = (i + 1).toString();
+        level.classList.add("level");
+        level.addEventListener("click", () => {
+            localStorage.setItem("current_level_index", i.toString());
+            location.href = "level.html";
+        })
+        container.appendChild(level);
+    }
+
+    const modal = document.querySelector("#backdrop");
+    const modalDesc = document.querySelector(".desc");
+    const descBtn = document.querySelector("#desc");
+    descBtn.addEventListener("click", () => {
+        modalDesc.style.display = "block";
+        modal.style.display = "block";
+    })
+
+    const close = document.querySelector(".close");
+    close.addEventListener("click", () => {
+        modal.style.display = "none";
+    })
+
+    navigator.serviceWorker.register("serviceWorker.js")
+        .then((reg) => {
+            console.log("service worker registered", reg);
+        })
+        .catch(err => {
+            console.log("error", err);
+        })
+</script>
+</body>
+</html>

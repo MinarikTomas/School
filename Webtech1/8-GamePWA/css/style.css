@@ -1,0 +1,173 @@
+html, body{
+    margin: 0;
+    padding: 0;
+}
+body{
+    overscroll-behavior: contain;
+}
+header{
+    display: flex;
+    justify-content: center;
+    border-bottom: 6px solid #DCDCDC;
+}
+.resp-img{
+    max-width: 100%;
+    height: auto;
+}
+
+.levels-container{
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+}
+
+.level{
+    background-color: #DCDCDC;
+    border: solid 4px gray;
+    border-radius: 15px;
+    text-align: center;
+    height: 50px;
+    width: 50px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.question{
+    text-align: center;
+    margin: 10px 0;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+ .options-ul{
+    list-style: none;
+    padding: 0;
+}
+
+.options-li, .solutions-li, .help-li{
+    width: 100%;
+    font-size: large;
+    background-color: #DCDCDC;
+    border: solid 2px gray;
+    border-radius: 5px;
+    margin-bottom: 4px;
+    padding: 5px 0;
+    text-align: center;
+    word-wrap: break-word;
+    box-sizing: border-box;
+}
+
+.options{
+    margin: auto;
+    width: 500px;
+}
+
+.dark-gray{
+    background-color: darkgray;
+}
+
+#next, #prev{
+    display: none;
+}
+
+.backdrop{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.modal{
+    position: relative;
+    background-color: #DCDCDC;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid darkgray;
+    border-radius: 5px;
+    width: 80%;
+}
+
+.modal-header h2{
+    text-align: center;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.desc, .solution, .help{
+    display: none;
+}
+
+.desc p, .desc li {
+    font-size: large;
+}
+
+
+.choose-level h2 {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.buttons{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    border-bottom: 6px solid #DCDCDC;
+    border-top: 6px solid #DCDCDC;
+    padding: 10px 0;
+}
+
+.buttons input{
+    font-size: larger;
+    border: solid 2px gray;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+#next, #prev{
+    font-size: x-large;
+}
+
+@media only screen and (min-width: 550px) {
+    .level{
+        height: 80px;
+        width: 80px;
+        font-size: 60px;
+    }
+}
+@media only screen and (max-width: 500px) {
+    .options{
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+}
+
+@media print {
+    .modal{
+        border: none;
+    }
+    .close{
+        display: none;
+    }
+}

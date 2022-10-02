@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: lightgray;
+}
+
+header {
+    background-color: deepskyblue;
+    padding: 1px;
+}
+
+header > h1 {
+    margin: 10px 5px 15px;
+}
+
+footer {
+    bottom: 0;
+    padding-left: 25px;
+}
+
+.main {
+    margin: 10px 15px;
+    padding: 10px;
+    background-color: white;
+    max-width: 1000px;
+    height: 90%;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+form {
+    background-color: ghostwhite;
+}
+
+.row2 {
+    display: grid;
+    grid: auto / auto auto;
+    grid-gap: 50px;
+}
+
+.row3 {
+    display: grid;
+    grid: auto / auto auto auto;
+    grid-gap: 20px;
+}
+
+.form_item {
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.row_item > input {
+    width: 90%;
+}
+
+.row_item > select {
+    width: 80%;
+}
+
+#div_other {
+    display: none;
+}
+
+textarea {
+    width: 50%;
+    min-width: 300px;
+}
+
+#f1_team, #f1_team_merc, #f1_team_rb {
+    display: none;
+}
+
+#fb_league, #fb_team_eng, #fb_team_spa {
+    display: none;
+}
+
+#study, #work{
+    display: none;
+}
+
+.warning {
+    display: none;
+    margin: 0;
+    color:red;
+    font-size: small;
+}
+
+@media only screen and (max-width: 768px) {
+    .row2 {
+        grid: auto /auto;
+        grid-gap: 20px;
+    }
+    .row3{
+        grid: auto / auto;
+    }
+}

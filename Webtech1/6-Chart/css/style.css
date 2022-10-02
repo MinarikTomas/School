@@ -1,0 +1,45 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: lightgrey;
+}
+
+header{
+    background-color: deepskyblue;
+    padding: 10px 0;
+}
+
+h1 {
+    text-align: center;
+    margin: 0;
+}
+
+#my-chart {
+    max-height: 400px;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin: 5px;
+}
+
+.row2 {
+    display: grid;
+    grid: auto / auto auto;
+    grid-gap: 50px;
+    width: 50%;
+}
+
+form {
+    padding: 5px 15px;
+}
+
+@media only screen and (max-width: 415px){
+    .row2{
+        grid: auto / auto;
+        grid-gap: 0;
+    }
+}

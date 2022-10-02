@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title>Zadanie 7</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js" integrity="sha512-zYXldzJsDrNKV+odAwFYiDXV2Cy37cwizT+NkuiPGsa9X1dOz04eHvUWVuxaJ299GvcJT31ug2zO4itXBjFx4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <header>
+        <h1>Zadanie 7</h1>
+    </header>
+    <label for="filter">Filtruj:</label>
+    <input id="filter" type="text">
+    <section></section>
+    <div id="backdrop">
+        <div id="modal"></div>
+    </div>
+    <footer>
+        <a href="https://www.fiawec.com/en/photos-videos/13">Zdroj</a>
+    </footer>
+
+
+<script>
+    const section = document.querySelector("section");
+    const filter = document.querySelector("#filter");
+    const backdrop = document.querySelector("#backdrop");
+    const modal = document.querySelector("#modal");
+    const images = [];
+    let currentId;
+
+    backdrop.addEventListener("click", () => {
+        backdrop.style.display = "none";
+    })
+
+    modal.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        return false;
+    })
+
+    if(!localStorage.getItem("order")){
+        localStorage.setItem("order", `[0, 1, 2, 3, 4, 5, 6, 7, 8]`)
+    }
+
+    if(!localStorage.getItem("filter")) {
+        localStorage.setItem("filter", "")
+    }
+
+    filter.value = localStorage.getItem("filter")
+
+    const addImagesToSection = (section) => {
+        const order = JSON.parse(localStorage.getItem("order"))
+        for(let i = 0; i < order.length; i++){
+            const img = document.createElement("img")
+            const image = images[order[i]]
+            img.src = `./images/${image.src}`
+            img.value = order[i];
+            img.addEventListener("click", (e) => {
+                currentId = e.srcElement.value;
+                backdrop.style.display = "flex";
+                modal.innerHTML = "";
+                createModal(image);
+            })
+            section.appendChild(img)
+        }
+    }
+
+    const createModal = (image) => {
+        const img = document.createElement("img")
+        img.id = "modal-img";
+        const imageTitle = document.createElement("span")
+        imageTitle.id = "modal-title";
+        const imageDescription = document.createElement("span")
+        imageDescription.id = "modal-des";
+        const prev = document.createElement("button")
+        const next  = document.createElement("button")
+        const wrap = document.createElement("div");
+        const start = document.createElement("button");
+        start.innerText = "Start"
+        start.addEventListener("click", () => {
+            interval = setInterval(slideShow, 500);
+        })
+        const stop = document.createElement("button");
+        stop.innerText = "Stop";
+        stop.addEventListener("click", () => {
+            clearInterval(interval)
+        })
+        wrap.appendChild(start);
+        wrap.appendChild(stop);
+        prev.classList.add("but", "prev")
+        prev.innerHTML = "&#8678;"
+        next.innerHTML = "&#8680;"
+        next.classList.add("but", "next");
+        next.addEventListener("click", () => {
+            nextImage(1);
+        })
+        prev.addEventListener("click", () => {
+            nextImage(-1)
+        })
+        img.src = `./images/${image.src}`
+        imageTitle.innerText = image.title
+        imageDescription.innerText = image.description
+        modal.appendChild(imageTitle)
+        modal.appendChild(prev)
+        modal.appendChild(next)
+        modal.appendChild(img)
+        modal.appendChild(imageDescription)
+        modal.appendChild(wrap)
+    }
+
+    const slideShow = () => {
+        nextImage(1)
+    }
+
+    const nextImage = (dif) => {
+        const order = JSON.parse(localStorage.getItem("order"));
+        let index = getIndex(currentId);
+        index = getNextImage(index, dif, order.length);
+        const image = images[order[index]];
+        changeModal(image);
+        currentId = order[index];
+    }
+
+    const changeModal = (image) => {
+        const img = document.getElementById("modal-img");
+        img.src =  `./images/${image.src}`;
+        document.querySelector("#modal-title").innerText = image.title;
+        document.querySelector("#modal-des").innerText = image.description;
+    }
+
+    const filterImages = () => {
+        const order = [];
+        for(let i = 0; i < images.length; i++){
+            if(images[i].title.indexOf(localStorage.getItem("filter")) !== -1){
+                order.push(i);
+            }
+        }
+        localStorage.setItem("order", JSON.stringify(order))
+    }
+
+    filter.addEventListener("input", event => {
+        localStorage.setItem("filter", event.target.value)
+        section.innerHTML = ''
+        filterImages()
+        addImagesToSection(section)
+    })
+
+    fetch("./images.json")
+        .then(res => res.json())
+        .then(data =>{
+            images.push(...data)
+            addImagesToSection(section)
+        })
+
+    Sortable.create(section, {
+        onEnd: function(evt){
+            const order = JSON.parse(localStorage.getItem("order"))
+            arrayMove(order, evt.oldIndex, evt.newIndex)
+            console.log(order);
+            localStorage.setItem("order", JSON.stringify(order))
+        }
+    });
+
+    function arrayMove(arr, fromIndex, toIndex) {
+        var element = arr[fromIndex];
+        arr.splice(fromIndex, 1);
+        arr.splice(toIndex, 0, element);
+    }
+
+
+
+    function getNextImage(current, dif, len){
+        current = current + dif;
+        return mod(current, len);
+    }
+
+    function mod(n, m) {
+        return ((n % m) + m) % m;
+    }
+
+    function getIndex(id){
+        const order = JSON.parse(localStorage.getItem("order"));
+        for(let i = 0; i < order.length; i++){
+            if(id === order[i]){
+                return i;
+            }
+        }
+    }
+
+</script>
+</body>
+</html>

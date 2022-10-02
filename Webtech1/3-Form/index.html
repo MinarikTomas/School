@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Zadanie 3</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <header>
+        <h1>Zadanie 3</h1>
+    </header>
+    <div class="main">
+        <h2>Formulár</h2>
+        <form action="https://iolab.sk/form2mail/form2mail.php" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="from" value="">
+            <input type="hidden" name="to" value="">
+            <input type="hidden" name="apikey" value="">
+            <input type="hidden" name="subject" value="">
+            <input type="hidden" name="redirectOk" value="https://www.google.com/">
+            <input type="hidden" name="redirectFalse" value="https://www.stuba.sk/">
+
+            <div class="row2 form_item">
+                <div class="row_item">
+                    <label for="age">Vek*</label><br>
+                    <input type="number" id="age" name="age" value="" placeholder="21" required onchange="validateAge()">
+                    <p class="warning" id="warning_age">vek a dátum narodenia sa nezhodujú</p>
+                </div>
+                <div class="row_item">
+                    <label for="date_of_birth">Dátum narodenia*</label><br>
+                    <input type="date" id="date_of_birth" name="birt_date" value="" required onchange="validateAge()">
+                    <p class="warning" id="warning_date">vek a dátum narodenia sa nezhodujú</p>
+                </div>
+            </div>
+            <div class="form_item">
+                <p>Aké programovacie jazyky ovládate?</p>
+                <input type="checkbox" name="language1" value="c" id="c">
+                <label for="c">C</label><br>
+                <input type="checkbox" name="language2" value="c++" id="c++">
+                <label for="c++">C++</label><br>
+                <input type="checkbox" name="language3" value="python" id="python">
+                <label for="python">Python</label><br>
+                <input type="checkbox" name="language4" value="java" id="java">
+                <label for="java">Java</label><br>
+                <input type="checkbox" name="language5" id="other" onchange="showOther()">
+                <label for="other">Iné</label><br>
+                <div id="div_other">
+                    <label for="other_languages">Iné jazyky:</label>
+                    <input type="text" name="other_language" value="" id="other_languages" disabled>
+                </div>
+            </div>
+            <div class="row3 form_item">
+                <div class="row_item">
+                    <label for="select1">Obľúbený šport</label><br>
+                    <select id="select1" name="sport" onchange="changeSelect2()">
+                        <option disabled selected value> -- vyber možnosť -- </option>
+                        <option value="football" >Futbal</option>
+                        <option value="f1" >Formula 1</option>
+                    </select>
+                </div>
+                <div class="row_item" id="fb_league">
+                    <label for="select2_fb">Obľúbená liga</label><br>
+                    <select id="select2_fb" name="league" onchange="changeSelect3Fb()" >
+                        <option disabled selected value> -- vyber možnosť -- </option>
+                        <option value="spa" >La Liga</option>
+                        <option value="eng" >Premier League</option>
+                    </select>
+                </div>
+                <div class="row_item" id="f1_team">
+                    <label for="select2_f1">Obľúbený tím</label><br>
+                    <select id="select2_f1" name="team" onchange="changeSelect3F1()" >
+                        <option disabled selected value> -- vyber možnosť -- </option>
+                        <option value="merc" >Mercedes</option>
+                        <option value="rb" >Red Bull</option>
+                    </select>
+                </div>
+                <div class="row_item" id="fb_team_spa">
+                    <label for="select3_fb_spa">Obľúbený tím</label><br>
+                    <select id="select3_fb_spa" name="team">
+                        <option disabled selected value> -- vyber možnosť -- </option>
+                        <option value="rma" >Real Madrid</option>
+                        <option value="fcb" >FC Barcelona</option>
+                        <option value="atm" >Atlético Madrid</option>
+                    </select>
+                </div>
+                <div class="row_item" id="fb_team_eng">
+                    <label for="select3_fb_eng">Obľúbený tím</label><br>
+                    <select id="select3_fb_eng" name="team">
+                        <option disabled selected value> -- vyber možnosť -- </option>
+                        <option value="mu" >Manchaster United</option>
+                        <option value="chel" >Chelsea FC</option>
+                        <option value="liv">Liverpool FC</option>
+                    </select>
+                </div>
+                <div class="row_item" id="f1_team_merc">
+                    <label for="select3_f1_merc">Obľúbený jazdec</label><br>
+                    <select id="select3_f1_merc" name="driver">
+                        <option disabled selected value> -- vyber možnosť -- </option>
+                        <option value="lh" >Lewis Hamiliton</option>
+                        <option value="vb" >Valtteri Bottas</option>
+                    </select>
+                </div>
+                <div class="row_item" id="f1_team_rb">
+                    <label for="select3_f1_rb" >Obľúbený jazdec</label><br>
+                    <select id="select3_f1_rb" name="driver">
+                        <option disabled selected value> -- vyber možnosť -- </option>
+                        <option value="mv" >Max Verstappen</option>
+                        <option value="sp" >Sergio Perez</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form_item">
+                <p>Študujete?*</p>
+                <div class="row2">
+                    <div>
+                        <label for="yes">Áno</label>
+                        <input type="radio" id=yes name="study" value="yes" onclick="showSchool()">
+                    </div>
+                    <div>
+                        <label for="no">Nie</label>
+                        <input type="radio" id="no" name="study" value="no" onchange="showWork()">
+                    </div>
+                </div>
+            </div>
+            <div class="form_item" id="study">
+                <label for="school">Škola</label><br>
+                <select id="school" name="school">
+                    <option disabled selected value> -- vyber možnosť -- </option>
+                    <option value="stu" >Slovenská technická univerzita</option>
+                    <option value="uk" >Univerzita Komenského</option>
+                    <option value="ukf" >Univerzita Konštantína Filozofa</option>
+                </select>
+            </div>
+            <div class="form_item" id="work">
+                <label for="work_country">Pracujete</label><br>
+                <select id="work_country" name="work">
+                    <option disabled selected value> -- vyber možnosť -- </option>
+                    <option value="sk">na Slovensku</option>
+                    <option value="abroad">v zahraničí</option>
+                </select>
+            </div>
+            <div class="form_item">
+                <label for="activities">Čomu sa venujete vo voľnom čase?</label><br>
+                <textarea name="activities" id="activities" rows="3" placeholder="napr: Beh, knihy, ..."></textarea>
+            </div>
+            <div class="form_item">
+                <label for="email">E-mail*</label><br>
+                <input type="email" id="email" name="email" value="" placeholder="meno@adresa.com" required onchange="validateEmail()">
+                <p class="warning" id="warning_email">meno@adresa.vrcholova domena<br>
+                                                      meno musí mať aspon 3 znaky<br>
+                                                      vrcholová doména musí mať 2-4 znaky</p>
+            </div>
+            <div class="form_item">
+                <p>* povinné</p>
+                <input type="submit" value="Odoslať">
+            </div>
+        </form>
+    </div>
+    <footer>
+        <p>Autor: Tomáš Minárik</p>
+    </footer>
+
+    <script>
+        function showOther(){
+            var checkBox = document.getElementById("other");
+            if(checkBox.checked){
+                document.getElementById("other_languages").disabled = false;
+                document.getElementById("div_other").style.display = "block";
+            }else{
+                document.getElementById("div_other").style.display = "none";
+                document.getElementById("other_languages").disabled = true;
+            }
+        }
+
+        function changeSelect2(){
+            var select1 = document.getElementById("select1");
+            switch (select1.value){
+                case "football":
+                    document.getElementById("f1_team").style.display = "none";
+                    document.getElementById("fb_league").style.display = "block";
+                    changeSelect3Fb();
+                    break;
+                case "f1":
+                    document.getElementById("fb_league").style.display = "none";
+                    document.getElementById("f1_team").style.display = "block";
+                    changeSelect3F1();
+                    break;
+            }
+        }
+
+        function changeSelect3Fb(){
+            var select2 = document.getElementById("select2_fb");
+            document.getElementById("f1_team_rb").style.display = "none";
+            document.getElementById("f1_team_merc").style.display = "none";
+            switch(select2.value){
+                case "spa":
+                    document.getElementById("fb_team_eng").style.display = "none";
+                    document.getElementById("fb_team_spa").style.display = "block";
+                    break;
+                case "eng":
+                    document.getElementById("fb_team_spa").style.display = "none";
+                    document.getElementById("fb_team_eng").style.display = "block";
+                    break;
+            }
+        }
+
+        function changeSelect3F1(){
+            var select2 = document.getElementById("select2_f1");
+            document.getElementById("fb_team_spa").style.display = "none";
+            document.getElementById("fb_team_eng").style.display = "none";
+            switch(select2.value){
+                case "merc":
+                    document.getElementById("f1_team_rb").style.display = "none";
+                    document.getElementById("f1_team_merc").style.display = "block";
+                    break;
+                case "rb":
+                    document.getElementById("f1_team_merc").style.display = "none";
+                    document.getElementById("f1_team_rb").style.display = "block";
+                    break;
+            }
+        }
+
+        function showSchool(){
+            document.getElementById("study").style.display = "block";
+            document.getElementById("work").style.display = "none";
+        }
+
+        function showWork(){
+            document.getElementById("work").style.display = "block";
+            document.getElementById("study").style.display = "none";
+        }
+
+        function validateAge(){
+            var inputAge = document.getElementById("age").valueAsNumber;
+            var dateOfBirth = document.getElementById("date_of_birth").valueAsDate;
+            var today = new Date();
+            if(inputAge && dateOfBirth){
+                var age = today.getFullYear() - dateOfBirth.getFullYear();
+                var m = today.getMonth() - dateOfBirth.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < dateOfBirth.getDate())) {
+                    age--;
+                }
+                if(age != inputAge){
+                    document.getElementById("warning_age").style.display = "block";
+                    document.getElementById("warning_date").style.display = "block";
+                    document.getElementById("age").style.borderColor = "red";
+                    document.getElementById("date_of_birth").style.borderColor = "red";
+                }else{
+                    document.getElementById("warning_age").style.display = "none";
+                    document.getElementById("warning_date").style.display = "none";
+                    document.getElementById("age").style.borderColor = "black";
+                    document.getElementById("date_of_birth").style.borderColor = "black";
+                }
+            }
+        }
+
+        function validateEmail(){
+            var email = document.getElementById("email");
+            if(/^.{3,}@.*\..{2,4}$/.test(email.value)){
+                document.getElementById("warning_email").style.display = "none";
+                document.getElementById("email").style.borderColor = "black";
+            }else{
+                document.getElementById("warning_email").style.display = "block";
+                document.getElementById("email").style.borderColor = "red";
+            }
+        }
+    </script>
+</body>
+</html>

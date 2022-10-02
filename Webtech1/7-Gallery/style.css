@@ -1,0 +1,95 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: lightgray;
+    height: 100%;
+}
+
+header {
+    background-color: deepskyblue;
+    padding: 1px;
+}
+
+header > h1 {
+    text-align: center;
+    margin: 10px 5px 15px;
+}
+
+section {
+    display: flex;
+    gap: 25px;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+section img {
+    transition: 0.2s;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+section img:hover {
+    transform: scale(1.1);
+}
+
+#backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(10, 10, 10, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#modal {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    max-width: 80vw;
+    position: relative;
+}
+
+#modal img {
+    max-width: 100%;
+    height: auto;
+}
+
+span {
+    text-align: center;
+}
+
+.but {
+    position: absolute;
+    z-index: 2;
+    background: none;
+    border: none;
+    font-size: 4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    border-radius: .25rem;
+    padding: 0 0.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.but:hover, .but:focus {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.but:focus {
+    border: 1px solid black;
+}
+
+.prev {
+    left: 1rem;
+}
+
+.next {
+    right: 1rem;
+}
+

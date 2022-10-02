@@ -1,0 +1,67 @@
+body {
+    background-color: lightgray;
+    min-height: 100vh;
+}
+
+header {
+    background-color: deepskyblue;
+}
+
+form {
+    background-color: whitesmoke;
+}
+
+.backdrop {
+    position: absolute;
+    min-height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    flex-direction: column;
+}
+
+.my_modal {
+    background-color: whitesmoke;
+    padding: 1rem;
+    margin: 4rem;
+    overflow-x: auto;
+}
+
+.my_invalid_input {
+    text-align: center;
+    font-size: small;
+    color: red;
+    display: none;
+}
+
+td {
+    border: 2px solid black;
+    border-collapse: collapse;
+    padding: 1rem;
+    text-align: center;
+    background-color: lightgrey;
+}
+
+.table_header {
+    background-color: deepskyblue;
+    font-weight: bold;
+}
+
+#table_wrapper {
+    width: 100%;
+}
+
+table{
+    width: 100%;
+}
+
+#button_wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 235px){
+    #button_wrapper {
+        justify-content: start;
+    }
+}

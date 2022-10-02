@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="theme-color" content="#DCDCDC">
+    <meta name="description" content="SortIT je jednoduchá vedomostná hra.">
+    <title>SortIT level</title>
+    <link rel="apple-touch-icon" href="/ios/144.png">
+    <link rel="icon" href="favicon.ico">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <a href="index.html">
+        <img src="SortIT_logo.png" alt="logo" class="resp-img">
+    </a>
+</header>
+<div class="question"></div>
+<div class="options"></div>
+<div class="buttons">
+    <input type="button" value="&#8678;" id="prev">
+    <input type="button" value="Riešenie" id="solution">
+    <input type="button" value="Nápoveda" id="help">
+    <input type="button" value="Skontrolovať" id="submit">
+    <input type="button" value="Popis a návod" id="desc">
+    <input type="button" value="Domov" id="home">
+    <input type="button" value="&#8680;" id="next">
+</div>
+<div id="backdrop" class="backdrop">
+    <div class="modal help">
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Nápoveda</h2>
+        </div>
+        <div class="modal-content">
+            <ul class="options-ul help-ul"></ul>
+        </div>
+    </div>
+    <div class="modal solution" >
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Riešenie</h2>
+        </div>
+        <div class="modal-content">
+            <ol class="solutions "></ol>
+        </div>
+    </div>
+    <div class="modal desc" >
+        <div class="modal-header">
+            <span class="close">&times;</span>
+            <h2>Popis a návod</h2>
+        </div>
+        <div class="modal-content">
+            <section>
+                <h3>Popis</h3>
+                <p>SortIT je jednoduchá vedomostná hra. Vašou úlohou je usporiadať možnosti, napríklad podľa popularity alebo roku.
+                Úlohy sú z oblastí šport, matematika, geografia, literatúra, história a technika.</p>
+                <h3>Návod</h3>
+                <p>Vašou úlohou je usporiadať zoznam. Prvky zoznamu je možné posúvať potiahnutím myšou alebo dotykom. Kliknutím
+                    na tlačidlo skontrolovať sa správne odpovede zafarbia na zeleno a pridajú sa k ním hodnoty(ak nejaké otázka má).
+                    Nesprávne odpovede sa zafarbia na červeno. Ak je celý zoznam správne usporiadaný už nie je možné meniť poradie v zozname
+                    a odomkne sa ďalší level.</p>
+                <ul>
+                    <li>Tlačidlami &#8678; a &#8680; je možné sa pohybovať medzi odomknutými levelmi.</li>
+                    <li>Tlačidlom domov a kliknutím na logo SortIT sa dostanete na úvodnú stránku so všetkými levelmi.</li>
+                    <li>Tlačidlom nápoveda sa zobarzia správne odpovede.</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</div>
+<script src="Sortable.min.js"></script>
+<script>
+    //The Fisher-Yates algorithm https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+    const shuffleArray = array => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+    }
+    let levels = [];
+    const order = JSON.parse(localStorage.getItem("order"));
+    let currentIndex = parseInt(localStorage.getItem("current_level_index"));
+    const question = document.querySelector(".question");
+    const optionsContainer = document.querySelector(".options");
+    let sortable = null;
+
+    const prevBtn = document.querySelector("#prev");
+
+    prevBtn.addEventListener("click", () => {
+        currentIndex--;
+        localStorage.setItem("current_level_index", currentIndex.toString());
+        displayLevel();
+    })
+
+    const nextBtn = document.querySelector("#next");
+    const unlockedLevels = JSON.parse(localStorage.getItem("unlocked_levels"));
+
+    nextBtn.addEventListener("click", () => {
+        currentIndex++;
+        localStorage.setItem("current_level_index", currentIndex.toString());
+        displayLevel();
+    })
+
+    const showNextAndPrevBtn = () => {
+        if(currentIndex < unlockedLevels.length - 1){
+            nextBtn.style.display = "block";
+        }else{
+            nextBtn.style.display = "none";
+        }
+        if(currentIndex > 0){
+            prevBtn.style.display = "block";
+        }else{
+            prevBtn.style.display = "none";
+        }
+    }
+
+    const setupOption = (option, i, data) => {
+        option.setAttribute("position", data[i].position.toString());
+        if(data[i].value){
+            option.setAttribute("value", data[i].value);
+        }
+    }
+
+    const addOptions = (list, data) => {
+        for(let i = 0; i < data.length; i++){
+            const option = document.createElement("li");
+            option.classList.add("options-li");
+            option.innerText = data[i].title;
+            setupOption(option, i, data);
+            list.appendChild(option);
+        }
+    }
+
+    const clear = () => {
+        optionsContainer.innerHTML = "";
+        question.innerHTML = "";
+    }
+
+    const displayOptions = () => {
+        const list = document.createElement("ul");
+        list.classList.add("options-ul");
+        optionsContainer.appendChild(list);
+        const data = JSON.parse(JSON.stringify(levels[order[currentIndex]].options));
+        shuffleArray(data);     //randomize options
+        addOptions(list, data);
+        sortable = Sortable.create(list, {
+            animation: 150,
+            ghostClass: "dark-gray"
+        });
+    }
+
+    const displayLevel = () => {
+        clear();
+        document.title = "SortIT level " + (currentIndex + 1);
+        showNextAndPrevBtn();
+        question.innerHTML = levels[order[currentIndex]].title;
+        displayOptions();
+
+    }
+
+    const changeCorrectAnswerStyle = (option) => {
+        option.style.backgroundColor = "#22B14C";
+        option.style.borderColor = "darkgreen";
+    }
+
+    const changeIncorrectAnswerStyle = (option) => {
+        option.style.backgroundColor = "#ED1C24";
+        option.style.borderColor = "darkred";
+    }
+
+    const getCorrectAnswersAndChangeStyle = (options) => {
+        let correctAnswers = 0;
+        for(let i = 0; i < levels[order[currentIndex]].options.length; i++){
+            const correctPosition = parseInt(options[i].getAttribute("position"));
+            if(correctPosition === i){
+                correctAnswers++;
+                changeCorrectAnswerStyle(options[i]);
+            }else{
+                changeIncorrectAnswerStyle(options[i]);
+            }
+        }
+        return correctAnswers;
+    }
+
+    const addValues = (options) => {
+        for(let i = 0; i < levels[order[currentIndex]].options.length; i++){
+            if(options[i].getAttribute("value")){
+                options[i].innerHTML += "  " + options[i].getAttribute("value");
+            }
+        }
+    }
+
+    const updateUnlockedLevels = () => {
+        const unlockedLevels = JSON.parse(localStorage.getItem("unlocked_levels"));
+        const order = JSON.parse(localStorage.getItem("order"));
+        if(currentIndex < levels.length && !unlockedLevels.includes(order[currentIndex + 1])){
+            unlockedLevels.push(order[currentIndex + 1]);
+            localStorage.setItem("unlocked_levels", JSON.stringify(unlockedLevels));
+        }
+    }
+
+    const submitBtn = document.querySelector("#submit");
+    submitBtn.addEventListener("click", () => {
+        const options = document.querySelectorAll("li");
+        const correctAnswers = getCorrectAnswersAndChangeStyle(options);
+        if(correctAnswers === levels[order[currentIndex]].options.length){
+            addValues(options);
+            sortable.options.sort = false;
+            updateUnlockedLevels();
+            if(currentIndex < levels.length - 1){
+                nextBtn.style.display = "block";
+            }
+        }
+    })
+
+    const modal = document.querySelector("#backdrop");
+    const solutionBtn = document.querySelector("#solution");
+    const descBtn = document.querySelector("#desc");
+    const helpBtn = document.querySelector("#help");
+    const modalDesc = document.querySelector(".desc");
+    const modalSolution = document.querySelector(".solution");
+    const modalHelp = document.querySelector(".help");
+
+    descBtn.addEventListener("click", () => {
+        modalDesc.style.display = "block";
+        modal.style.display = "block";
+    })
+
+    const addSolutions = (list) => {
+        const data = levels[order[currentIndex]].options;
+        for(let i = 0; i < data.length; i++){
+            const solution = document.createElement("li")
+            solution.classList.add("solutions-li")
+            solution.innerText = data[i].title;
+            if (data[i].value){
+                solution.innerText += "  " + data[i].value.toString();
+            }
+            list.appendChild(solution);
+        }
+    }
+
+    solutionBtn.addEventListener("click", () => {
+        const list = document.querySelector(".solutions");
+        list.innerHTML = "";
+        addSolutions(list);
+        modalSolution.style.display = "block";
+        modal.style.display = "block";
+    })
+
+    const addHelpItems = (list) => {
+        const indexes = [0, 1, 2, 3, 4];
+        shuffleArray(indexes);
+        const data = levels[order[currentIndex]].options;
+        for (let i = 0; i < 2; i++){
+            const item = document.createElement("li");
+            item.classList.add("help-li");
+            item.innerText = (1 + data[indexes[i]].position).toString() + ". " + data[indexes[i]].title;
+            if(data[indexes[i]].value){
+                item.innerText += " " + data[indexes[i]].value;
+            }
+            list.appendChild(item);
+        }
+    }
+
+    helpBtn.addEventListener("click", () => {
+        const list = document.querySelector(".help-ul");
+        list.innerHTML = "";
+        addHelpItems(list);
+        modalHelp.style.display = "block";
+        modal.style.display = "block";
+    })
+
+    const closeModal = () => {
+        modal.style.display = "none";
+        modalDesc.style.display = "none";
+        modalSolution.style.display = "none";
+        modalHelp.style.display = "none";
+    }
+
+    const close = document.querySelectorAll(".close");
+    for(let i = 0; i < close.length; i++){
+        close[i].addEventListener("click", closeModal);
+    }
+
+    const homeBtn = document.querySelector("#home");
+    homeBtn.addEventListener("click", () => {
+        location.href = "index.html";
+    })
+
+    fetch("./Levels.json")
+        .then(response => response.json())
+        .then(data => {
+            levels.push(...data);
+            displayLevel();
+        })
+</script>
+</body>
+</html>

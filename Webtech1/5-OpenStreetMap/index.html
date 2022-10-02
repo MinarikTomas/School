@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title>Zadanie 5</title>
+    <link rel="stylesheet" href="css/styles.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header><h1>Fakulta elektrotechniky a informatiky Slovenskej technickej univerzity v Bratislave</h1></header>
+        <div id="map"></div>
+    </div>
+
+    <script>
+        // initialize Leaflet
+        const gps = {lon: 17.073, lat: 48.153};
+        var map = L.map('map').setView(gps, 16);
+
+        // add the OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+        }).addTo(map);
+
+        // show the scale bar on the lower left corner
+        L.control.scale({imperial: true, metric: true}).addTo(map);
+
+        var bloky = [{
+            "type": "Feature",
+            "properties": {
+                "blok": "A",
+                "popupContent": "<h4>Blok A</h4>" +
+                                "<ul> " +
+                                "<li>Inštitút komunikácie a aplikovanej lingvistiky</li> " +
+                                "<li>Ústav jadrového a fyzikálneho inžinierstva</li> " +
+                                "</ul>"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [17.073876, 48.151820],
+                    [17.073876, 48.151960],
+                    [17.072554, 48.151963],
+                    [17.072554, 48.151828]
+                ]]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "blok": "B",
+                "popupContent": "<h4>Blok B</h4>" +
+                                "<ul>" +
+                                "<li>Ústav elektrotechniky</li>" +
+                                "<li>Ústav multimediálnych informačných a komunikačných technológií</li>" +
+                                "</ul>"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [17.074358, 48.152324],
+                    [17.074358, 48.152462],
+                    [17.073000, 48.152468],
+                    [17.073000, 48.152333]
+                ]]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "blok": "C",
+                "popupContent": "<h4>Blok C</h4>" +
+                                "<ul>" +
+                                "<li>Ústav elektroenergetiky a aplikovanej elektrotechniky</li>" +
+                                "<li>Ústav informatiky a matematiky</li>" +
+                                "</ul>"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [17.073875, 48.152826],
+                    [17.073875, 48.152968],
+                    [17.072817, 48.152975],
+                    [17.072817, 48.152831]
+                ]]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "blok": "D",
+                "popupContent": "<h4>Blok D</h4>" +
+                                "<ul>" +
+                                "<li>Ústav automobilovej mechatroniky</li>" +
+                                "<li>Ústav robotiky a kybernetiky</li>" +
+                                "</ul>"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [17.074372, 48.153329],
+                    [17.074372, 48.153473],
+                    [17.073203, 48.153473],
+                    [17.073203, 48.153335]
+                ]]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "blok": "E",
+                "popupContent": "<h4>Blok E</h4>" +
+                                "<ul>" +
+                                "<li>Ústav elektroniky a fotoniky</li>" +
+                                "</ul>"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [17.073892, 48.153834],
+                    [17.073892, 48.153977],
+                    [17.072822, 48.153982],
+                    [17.072822, 48.153840]
+                ]]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "blok": "T",
+                "popupContent": "<h4>Blok T</h4>" +
+                    "<ul>" +
+                    "<li>Technologický inštitút športu</li>" +
+                    "</ul>"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [17.072820, 48.153134],
+                    [17.072815, 48.154454],
+                    [17.072559, 48.154454],
+                    [17.072566, 48.153134]
+                ]]
+            }
+        }];
+
+        var myStyle = {
+            "color" : "#0000ff"
+        };
+
+        L.geoJSON(bloky, {
+            style: myStyle
+        , onEachFeature: (feature, layer) => {
+                layer.bindPopup(feature.properties.popupContent)
+            }
+        }).addTo(map);
+
+        var mhd = [{
+            "type": "Feature",
+            "properties": {
+                "mhd": "bus",
+                "popupContent": "<h4>Zoo</h4>" +
+                                "<div class='mhd_container'>" +
+                                "<div class='bus'>31</div>" +
+                                "<div class='bus'>39</div>" +
+                                "<div class='bus_n'>N31</div>" +
+                                "</div>"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.075123, 48.154118]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "mhd": "bus",
+                "popupContent": "<h4>Zoo</h4>" +
+                    "<div class='mhd_container'>" +
+                    "<div class='bus'>31</div>" +
+                    "<div class='bus'>39</div>" +
+                    "<div class='bus_n'>N31</div>" +
+                    "</div>"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.074560, 48.154605]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "mhd": "bus",
+                "popupContent": "<h4>Zoo</h4>" +
+                    "<div class='mhd_container'>" +
+                    "<div class='bus'>30</div>" +
+                    "<div class='bus'>32</div>" +
+                    "<div class='bus'>37</div>" +
+                    "<div class='bus'>92</div>" +
+                    "<div class='bus'>192</div>" +
+                    "<div class='bus_n'>N29</div>" +
+                    "</div>"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.075780, 48.154650]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "mhd": "bus",
+                "popupContent": "<h4>Zoo</h4>" +
+                    "<div class='mhd_container'>" +
+                    "<div class='bus'>30</div>" +
+                    "<div class='bus'>32</div>" +
+                    "<div class='bus'>37</div>" +
+                    "<div class='bus'>92</div>" +
+                    "<div class='bus'>192</div>" +
+                    "<div class='bus_n'>N29</div>" +
+                    "</div>"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.076920, 48.154050]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "mhd": "bus",
+                "popupContent": "<h4>Botanická záhrada</h4>" +
+                    "<div class='mhd_container'>" +
+                    "<div class='bus'>29</div>" +
+                    "<div class='bus'>32</div>" +
+                    "<div class='bus_n'>N29</div>" +
+                    "<div class='bus_n'>N33</div>" +
+                    "<div class='bus_n'>N33</div>" +
+                    "</div>"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.072030, 48.148330]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "mhd": "bus",
+                "popupContent": "<h4>Botanická záhrada</h4>" +
+                    "<div class='mhd_container'>" +
+                    "<div class='bus'>29</div>" +
+                    "<div class='bus'>32</div>" +
+                    "<div class='bus_n'>N29</div>" +
+                    "<div class='bus_n'>N33</div>" +
+                    "<div class='bus_n'>N33</div>" +
+                    "</div>"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.072295, 48.147942]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "mhd": "tram",
+                "popupContent": "<h4>Botanická záhrada</h4>" +
+                    "<div class='mhd_container'>" +
+                    "<div class='tram'>4</div>" +
+                    "<div class='tram'>9</div>" +
+                    "</div>"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.071673, 48.148094]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {
+                "mhd": "tram",
+                "popupContent": "<h4>Botanická záhrada</h4>" +
+                    "<div class='mhd_container'>" +
+                    "<div class='tram'>4</div>" +
+                    "<div class='tram'>9</div>" +
+                    "</div>"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.072450, 48.148150]
+            }
+        }];
+
+        var busIcon = L.icon({
+            iconUrl: "icons/front-of-bus.png",
+            iconSize: [32, 32],
+            iconAnchor: [16, 16],
+            popupAnchor: [0, 0]
+        });
+
+        var tramIcon = L.icon({
+           iconUrl: "icons/tram-car.png",
+           iconSize: [32, 32],
+            iconAnchor: [16, 16],
+            popupAnchor: [0, 0]
+        });
+
+
+        L.geoJSON(mhd, {
+            pointToLayer: function(feature, latlng) {
+                switch (feature.properties.mhd) {
+                    case 'bus': return L.marker(latlng, {icon: busIcon});
+                    case 'tram': return L.marker(latlng, {icon: tramIcon});
+                }
+            },
+            onEachFeature: (feature, layer) => {
+                layer.bindPopup(feature.properties.popupContent)
+            }
+        }).addTo(map);
+
+        var routing = null;
+
+        var geocoder = L.Control.geocoder({
+            defaultMarkGeocode: false
+        }).on('markgeocode', function(e){
+            if(routing){
+                routing.setWaypoints([
+                    L.latLng(e.geocode.center.lat, e.geocode.center.lng),
+                    L.latLng(48.151820, 17.073350)
+                ])
+            }else{
+                routing = L.Routing.control({
+                    waypoints: [
+                        L.latLng(e.geocode.center.lat, e.geocode.center.lng),
+                        L.latLng(48.151820, 17.073350)
+                    ],
+                    routeWhileDragging: true
+                }).addTo(map);
+            }
+        }).addTo(map)
+
+        var intSTU = [{
+            "type": "Feature",
+            "properties": {"popupContent": "ŠD Mladosť"},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.064153, 48.158839]
+            }
+        }];
+
+        var intUK = [{
+            "type": "Feature",
+            "properties": {"popupContent": "Manželské internáty"},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.062978, 48.160070]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {"popupContent": "Internát Ľ. Štúra"},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.066283, 48.160065]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {"popupContent": "Átriové domky"},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.068667, 48.160404]
+            }
+        }, {
+            "type": "Feature",
+            "properties": {"popupContent": "Družba"},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [17.069964   , 48.147709]
+            }
+        }];
+
+
+        var stu = L.geoJSON(intSTU, {
+            onEachFeature: (feature, layer) => {
+                layer.bindPopup(feature.properties.popupContent)
+            }
+        }).addTo(map);
+
+        var uk = L.geoJSON(intUK, {
+            onEachFeature: (feature, layer) => {
+                layer.bindPopup(feature.properties.popupContent)
+            }
+        }).addTo(map);
+
+        var overlayMaps = {
+            "Internáty STU": stu,
+            "Internáty UK": uk
+        };
+
+        L.control.layers(null, overlayMaps).addTo(map);
+    </script>
+</body>
+</html>

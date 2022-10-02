@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title>Zadanie 6</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js" integrity="sha512-GMGzUEevhWh8Tc/njS0bDpwgxdCJLQBWG3Z2Ct+JGOpVnEmjvNx6ts4v6A2XJf1HOrtOsfhv3hBKpK9kE5z8AQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js" integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/1.1.1/chartjs-plugin-zoom.min.js" integrity="sha512-NxlWEbNbTV6acWnTsWRLIiwzOw0IwHQOYUCKBiu/NqZ+5jSy7gjMbpYI+/4KvaNuZ1qolbw+Vnd76pbIUYEG8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="js/amplitude-input.js" type="module"></script>
+</head>
+<body>
+    <header>
+        <h1>Zadanie 6</h1>
+    </header>
+    <div class="container">
+        <canvas id="my-chart"></canvas>
+        <div>
+            <form>
+                <div>
+                    <input id="end" type="button" value="Koniec">
+                </div>
+                <div class="row2">
+                    <div>
+                        <label for="sinus">Sinus</label>
+                        <input id="sinus" type="checkbox" checked>
+                    </div>
+                    <div>
+                        <label for="cosinus">Cosinus</label>
+                        <input id="cosinus" type="checkbox" checked>
+                    </div>
+                </div>
+                <amplitude-input id="amp-input" value="1"></amplitude-input>
+            </form>
+        </div>
+    </div>
+<script>
+
+    const ctx = document.getElementById('my-chart');
+
+    const data = {
+        labels: [],
+        datasets: [{
+            label: 'Sinus',
+            data: [],
+            fill: false,
+            borderColor: 'blue',
+            tension: 0,
+            hidden: false
+        }, {
+            label: 'Cosinus',
+            data: [],
+            fill: false,
+            borderColor: 'red',
+            tension: 0,
+            hidden: false
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {}
+    };
+
+    const chart = new Chart(ctx, config);
+
+    const evtSource = new EventSource("");
+
+    updateData = (event) => {
+        const data = JSON.parse(event.data);
+        const amp = document.querySelector("#amp-input").getAttribute('value');
+        console.log(amp);
+        console.log(data);
+        chart.data.labels.push(data.x);
+        chart.data.datasets[0].data.push(amp * data.y1);
+        chart.data.datasets[1].data.push(amp * data.y2);
+        chart.update();
+    }
+
+    evtSource.addEventListener("message", updateData);
+
+    const buttonEnd = document.querySelector("#end");
+    buttonEnd.addEventListener('click', () => {
+        evtSource.removeEventListener("message", updateData);
+        config.options = {
+            plugins: {
+                zoom: {
+                    zoom: {
+                        wheel: {
+                            enabled: true,
+                        }
+                    }
+                }
+            }
+        };
+        chart.update();
+    });
+
+    const checkboxSinus = document.querySelector("#sinus");
+    checkboxSinus.addEventListener('change', () => {
+        chart.data.datasets[0].hidden = !checkboxSinus.checked;
+        chart.update();
+    });
+
+    const checkboxCosinus = document.querySelector("#cosinus");
+    checkboxCosinus.addEventListener('change', () => {
+        chart.data.datasets[1].hidden = !checkboxCosinus.checked;
+        chart.update();
+    });
+
+
+    </script>
+</body>
+</html>
